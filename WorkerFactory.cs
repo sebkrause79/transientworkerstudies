@@ -1,21 +1,24 @@
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace TransientWorkerStudies
 {
-    public class FactoryWorker : BackgroundService
+    public class WorkerFactory : BackgroundService
     {
         private IDbContextFactory<Context> _contextFactory;
+        private string _name;
 
-        public FactoryWorker(IDbContextFactory<Context> factory)
+        public WorkerFactory(IDbContextFactory<Context> factory, Workertype type)
         {
             _contextFactory = factory;
+            _name = type.Name;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                Console.WriteLine("\r\n(1) Factory: 0. Worker running at: " + DateTimeOffset.Now);
+                Console.WriteLine($"\r\n{_name}: 0. Worker running at: {DateTimeOffset.Now}");
                 new Helper().Work(_contextFactory);
 
                 await Task.Delay(3000, stoppingToken);

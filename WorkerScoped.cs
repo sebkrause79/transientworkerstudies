@@ -1,13 +1,15 @@
 ﻿namespace TransientWorkerStudies
 {
-    internal class ScopedWorker : BackgroundService
+    internal class WorkerScoped : BackgroundService
     {
         private IServiceScopeFactory _scopeFactory;
+        private string _name;
 
-        public ScopedWorker(IServiceScopeFactory scopeFactory)
+        public WorkerScoped(IServiceScopeFactory scopeFactory, Workertype type)
         {
             _scopeFactory = scopeFactory;
-        }
+            _name = type.Name;
+    }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -16,10 +18,10 @@
 
                 await Task.Delay(1000, stoppingToken);
 
-                using (var s = _scopeFactory.CreateScope())
+                using (var scope = _scopeFactory.CreateScope())
                 {
-                    Console.WriteLine("\r\n(3) Scope: 0. Worker running at: " + DateTimeOffset.Now);
-                    var ctx = s.ServiceProvider.GetRequiredService<IContext>();
+                    Console.WriteLine($"\r\n{_name}: 0. Worker running at: {DateTimeOffset.Now}");
+                    var ctx = scope.ServiceProvider.GetRequiredService<IContext>();
                     ctx.Increase();
                 }                    
 

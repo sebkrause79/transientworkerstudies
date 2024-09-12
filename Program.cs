@@ -9,8 +9,13 @@ namespace TransientWorkerStudies
             IHost factoryHost = Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>
                 {
-                    services.AddSingleton(new Workertype { WorkerPrefix = "Factory", Id = 1 });
-                    services.AddHostedService<FactoryWorker>();
+                    services.AddSingleton(new Workertype 
+                    { 
+                        Id = 1,
+                        WorkerPrefix = "Factory", 
+                    });
+                    services.AddHostedService<WorkerFactory>();
+
                     services.AddDbContextFactory<Context>();
                 })
                 .Build();
@@ -19,8 +24,13 @@ namespace TransientWorkerStudies
             IHost funcHost = Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>
                 {
-                    services.AddSingleton(new Workertype { WorkerPrefix = "Function", Id = 2 });
-                    services.AddHostedService<FuncWorker>();
+                    services.AddSingleton(new Workertype 
+                    { 
+                        Id = 2,
+                        WorkerPrefix = "Function", 
+                    });
+                    services.AddHostedService<WorkerFunc>();
+
                     services.AddTransient<IContext, Context>();
                     services.AddSingleton<Func<IContext>>(srv => () => srv.GetService<IContext>());
                 })
@@ -30,8 +40,13 @@ namespace TransientWorkerStudies
             IHost scopedHost = Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>
                 {
-                    services.AddSingleton(new Workertype { WorkerPrefix = "Scope", Id = 3 });
-                    services.AddHostedService<ScopedWorker>();
+                    services.AddSingleton(new Workertype 
+                    { 
+                        Id = 3,
+                        WorkerPrefix = "Scope", 
+                    });
+                    services.AddHostedService<WorkerScoped>();
+
                     services.AddScoped<IContext, Context>();
                 })
                 .Build();

@@ -1,12 +1,14 @@
 ﻿namespace TransientWorkerStudies
 {
-    internal class FuncWorker : BackgroundService
+    internal class WorkerFunc : BackgroundService
     {
         private Func<IContext> _contextFunc;
+        private string _name;
 
-        public FuncWorker(Func<IContext> contextFunc)
+        public WorkerFunc(Func<IContext> contextFunc, Workertype type)
         {
             _contextFunc = contextFunc;
+            _name = type.Name;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -15,7 +17,7 @@
             {
                 await Task.Delay(2000, stoppingToken);
 
-                Console.WriteLine("\r\n(2) Function: 0. Worker running at: " + DateTimeOffset.Now);
+                Console.WriteLine($"\r\n{_name}: 0. Worker running at: {DateTimeOffset.Now}");
                 new Helper().Work(_contextFunc);
 
                 await Task.Delay(1000, stoppingToken);
