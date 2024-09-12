@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Test04_Worker
+namespace TransientWorkerStudies
 {
     public class FactoryWorker : BackgroundService
     {
@@ -15,12 +15,22 @@ namespace Test04_Worker
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                Console.WriteLine("Factory: 0. Worker running at: " + DateTimeOffset.Now);
-                var ctx = _contextFactory.CreateDbContext();
-                ctx.Increase();
+                Console.WriteLine("\r\n(1) Factory: 0. Worker running at: " + DateTimeOffset.Now);
+                new Helper().Work(_contextFactory);
 
                 await Task.Delay(3000, stoppingToken);
             }
         }
+
+        class Helper
+        {
+            public void Work(IDbContextFactory<Context> factory)
+            {
+                var ctx = factory.CreateDbContext();
+                ctx.Increase();
+            }
+        }
     }
+
+    
 }

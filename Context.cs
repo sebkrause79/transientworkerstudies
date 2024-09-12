@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Test04_Worker
+namespace TransientWorkerStudies
 {
     public class Data
     {
@@ -18,7 +18,7 @@ namespace Test04_Worker
         { 
             _type = type;
             Database.EnsureCreated();
-            Console.WriteLine($"{type.WorkerPrefix}: 1. created new context.");
+            Console.WriteLine($"{type.Name}: 1. created new context.");
         }
 
         public void Increase()
@@ -32,12 +32,12 @@ namespace Test04_Worker
             data.Value++;
             _value = data.Value;
             SaveChanges();
-            Console.WriteLine($"{_type.WorkerPrefix}: 2. set value {_value}");
+            Console.WriteLine($"{_type.Name}: 2. set value {_value}");
         }
 
         public override void Dispose()
         {
-            Console.WriteLine($"{_type.WorkerPrefix}: 3. disposed. (Value: {_value})");
+            Console.WriteLine($"{_type.Name}: 3. disposed. (Value: {_value})");
             base.Dispose();
         }
 

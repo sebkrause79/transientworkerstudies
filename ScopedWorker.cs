@@ -1,4 +1,4 @@
-﻿namespace Test04_Worker
+﻿namespace TransientWorkerStudies
 {
     internal class ScopedWorker : BackgroundService
     {
@@ -18,7 +18,7 @@
 
                 using (var s = _scopeFactory.CreateScope())
                 {
-                    Console.WriteLine("Scope: 0. Worker running at: " + DateTimeOffset.Now);
+                    Console.WriteLine("\r\n(3) Scope: 0. Worker running at: " + DateTimeOffset.Now);
                     var ctx = s.ServiceProvider.GetRequiredService<IContext>();
                     ctx.Increase();
                 }                    

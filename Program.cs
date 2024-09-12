@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Test04_Worker
+namespace TransientWorkerStudies
 {
     public class Program
     {
@@ -43,5 +43,6 @@ namespace Test04_Worker
     {
         public string WorkerPrefix { get; set; }
         public int Id { get; set; }
+        public string Name => $"({Id}) {WorkerPrefix}";
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace Test04_Worker
+﻿namespace TransientWorkerStudies
 {
     public interface IContext : IDisposable
     {

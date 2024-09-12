@@ -1,7 +1,4 @@
-﻿
-using Microsoft.EntityFrameworkCore.Internal;
-
-namespace Test04_Worker
+﻿namespace TransientWorkerStudies
 {
     internal class FuncWorker : BackgroundService
     {
@@ -18,11 +15,19 @@ namespace Test04_Worker
             {
                 await Task.Delay(2000, stoppingToken);
 
-                Console.WriteLine("Function: 0. Worker running at: " + DateTimeOffset.Now);
-                var ctx = _contextFunc();
-                ctx.Increase();
+                Console.WriteLine("\r\n(2) Function: 0. Worker running at: " + DateTimeOffset.Now);
+                new Helper().Work(_contextFunc);
 
                 await Task.Delay(1000, stoppingToken);
+            }
+        }
+
+        class Helper
+        {
+            public void Work(Func<IContext> factory)
+            {
+                var ctx = factory();
+                ctx.Increase();
             }
         }
     }
