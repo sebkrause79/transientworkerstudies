@@ -1,5 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-
 namespace TransientWorkerStudies
 {
     public class Program
