@@ -27,7 +27,7 @@ public static class Program
                 services.AddSingleton(new Workertype 
                 { 
                     Id = 2,
-                    WorkerPrefix = "Factory",
+                    WorkerPrefix = "Factory.",
                     WaitStart = 1500,
                 });
                 services.AddHostedService<WorkerFactory>();
@@ -43,7 +43,7 @@ public static class Program
                 services.AddSingleton(new Workertype 
                 { 
                     Id = 3,
-                    WorkerPrefix = "Scope",
+                    WorkerPrefix = "Scope...",
                     WaitStart = 2500,
                 });
                 services.AddHostedService<WorkerScoped>();

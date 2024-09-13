@@ -18,7 +18,7 @@ public sealed class Context : DbContext, IContext
     {
         _type = type;
         Database.EnsureCreated();
-        Console.WriteLine($"{type.Name}: 1. created new context.");
+        Console.WriteLine($"{_type.Name}: 1. created new context.");
     }
 
     public void Increase()
@@ -39,6 +39,11 @@ public sealed class Context : DbContext, IContext
     {
         Console.WriteLine($"{_type.Name}: 3. disposed. (Value: {_value})");
         base.Dispose();
+    }
+
+    ~Context()
+    {
+        Console.WriteLine($"{_type.Name}: 4. destroyed. (Value: {_value})");
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
