@@ -3,24 +3,24 @@
     internal class WorkerFunc : BackgroundService
     {
         private Func<IContext> _contextFunc;
-        private string _name;
+        private Workertype _type;
 
         public WorkerFunc(Func<IContext> contextFunc, Workertype type)
         {
             _contextFunc = contextFunc;
-            _name = type.Name;
+            _type = type;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                await Task.Delay(2000, stoppingToken);
+                await Task.Delay(_type.WaitStart, stoppingToken);
+                Console.WriteLine($"\r\n{_type.Name}: 0. Worker running at: {DateTimeOffset.Now}");
 
-                Console.WriteLine($"\r\n{_name}: 0. Worker running at: {DateTimeOffset.Now}");
                 new Helper().Work(_contextFunc);
 
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(3000 - _type.WaitStart, stoppingToken);
             }
         }
 

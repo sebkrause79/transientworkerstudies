@@ -15,7 +15,7 @@ namespace TransientWorkerStudies
         public DbSet<Data> Datas { get; set; }
 
         public Context(Workertype type)
-        { 
+        {
             _type = type;
             Database.EnsureCreated();
             Console.WriteLine($"{type.Name}: 1. created new context.");
@@ -46,5 +46,9 @@ namespace TransientWorkerStudies
             optionsBuilder.UseSqlite("Data Source=db.db");
             base.OnConfiguring(optionsBuilder);
         }
+    }
+    public interface IContext : IDisposable
+    {
+        void Increase();
     }
 }

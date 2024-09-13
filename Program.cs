@@ -4,28 +4,14 @@ namespace TransientWorkerStudies
     {
         public static void Main(string[] args)
         {
-            IHost factoryHost = Host.CreateDefaultBuilder(args)
-                .ConfigureServices(services =>
-                {
-                    services.AddSingleton(new Workertype 
-                    { 
-                        Id = 1,
-                        WorkerPrefix = "Factory", 
-                    });
-                    services.AddHostedService<WorkerFactory>();
-
-                    services.AddDbContextFactory<Context>();
-                })
-                .Build();
-            factoryHost.RunAsync();
-
             IHost funcHost = Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>
                 {
                     services.AddSingleton(new Workertype 
                     { 
-                        Id = 2,
-                        WorkerPrefix = "Function", 
+                        Id = 1,
+                        WorkerPrefix = "Function",
+                        WaitStart = 500,
                     });
                     services.AddHostedService<WorkerFunc>();
 
@@ -35,13 +21,30 @@ namespace TransientWorkerStudies
                 .Build();
             funcHost.RunAsync();
 
+            IHost factoryHost = Host.CreateDefaultBuilder(args)
+                .ConfigureServices(services =>
+                {
+                    services.AddSingleton(new Workertype 
+                    { 
+                        Id = 2,
+                        WorkerPrefix = "Factory",
+                        WaitStart = 1500,
+                    });
+                    services.AddHostedService<WorkerFactory>();
+
+                    services.AddDbContextFactory<Context>();
+                })
+                .Build();
+            factoryHost.RunAsync();
+
             IHost scopedHost = Host.CreateDefaultBuilder(args)
                 .ConfigureServices(services =>
                 {
                     services.AddSingleton(new Workertype 
                     { 
                         Id = 3,
-                        WorkerPrefix = "Scope", 
+                        WorkerPrefix = "Scope",
+                        WaitStart = 2500,
                     });
                     services.AddHostedService<WorkerScoped>();
 
@@ -57,5 +60,6 @@ namespace TransientWorkerStudies
         public string WorkerPrefix { get; set; }
         public int Id { get; set; }
         public string Name => $"({Id}) {WorkerPrefix}";
+        public int WaitStart { get; set; }
     }
 }
