@@ -1,17 +1,15 @@
 namespace TransientWorkerStudies;
 
-using Microsoft.EntityFrameworkCore;
 using System;
-using System.Text;
 
 public class WorkerFactory : BackgroundService
 {
-    private readonly IDbContextFactory<Context> _contextFactory;
+    private readonly Func<IContext> _contextFactory;
     private readonly Workertype _type;
     private int _gc;
     private int _runs = 0;
 
-    public WorkerFactory(IDbContextFactory<Context> factory, Workertype type)
+    public WorkerFactory(Func<IContext> factory, Workertype type)
     {
         _contextFactory = factory;
         _type = type;
@@ -33,9 +31,9 @@ public class WorkerFactory : BackgroundService
 
     class Helper
     {
-        public void Work(IDbContextFactory<Context> factory)
+        public void Work(Func<IContext> factory)
         {
-            var ctx = factory.CreateDbContext();
+            var ctx = factory();
             ctx.Increase();
         }
     }

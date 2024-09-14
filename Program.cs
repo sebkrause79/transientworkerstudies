@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace TransientWorkerStudies;
 
 public static class Program
@@ -7,16 +9,16 @@ public static class Program
         IHost funcHost = Host.CreateDefaultBuilder(args)
             .ConfigureServices(services =>
             {
-                services.AddSingleton(new Workertype 
-                { 
+                var type = new Workertype
+                {
                     Id = 1,
                     WorkerPrefix = "Function",
                     WaitStart = 500,
-                });
+                };
+                services.AddSingleton(type);
                 services.AddHostedService<WorkerFunc>();
 
-                services.AddTransient<IContext, Context>();
-                services.AddSingleton<Func<IContext>>(srv => () => srv.GetService<IContext>()!);
+                services.AddSingleton<Func<IContext>>(srv => () => new Context(type));
             })
             .Build();
         funcHost.RunAsync();
@@ -33,6 +35,7 @@ public static class Program
                 services.AddHostedService<WorkerFactory>();
 
                 services.AddDbContextFactory<Context>();
+                services.AddSingleton<Func<IContext>>(srv => srv.GetService<IDbContextFactory<Context>>()!.CreateDbContext);
             })
             .Build();
         factoryHost.RunAsync();
